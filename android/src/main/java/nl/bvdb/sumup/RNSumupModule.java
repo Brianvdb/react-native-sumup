@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -15,6 +16,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.sumup.merchant.Models.TransactionInfo;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpLogin;
@@ -27,6 +29,8 @@ import java.math.BigDecimal;
 public class RNSumupModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
+
+    private static final String EVENT_LOGGED_IN = "loggedIn";
 
     private static final int REQUEST_CODE_LOGIN = 1;
     private static final int REQUEST_CODE_PAYMENT = 2;
@@ -93,6 +97,18 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
         SumUpAPI.logout();
     }
 
+    private void sendEvent(String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
+    private void onLoggedIn() {
+        WritableMap map = Arguments.createMap();
+        sendEvent(EVENT_LOGGED_IN, map);
+    }
+
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
 
         @Override
@@ -105,7 +121,10 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
 
                     }
                     break;
-
+                case REQUEST_CODE_LOGIN:
+                    if (resultCode == SumUpAPI.Response.ResultCode.SUCCESSFUL || resultCode == SumUpAPI.Response.ResultCode.ERROR_ALREADY_LOGGED_IN) {
+                        onLoggedIn();
+                    }
                 default:
                     break;
             }

@@ -1,4 +1,4 @@
-import {NativeModules} from 'react-native';
+import {NativeModules, DeviceEventEmitter} from 'react-native';
 
 const NativeRNSumup = NativeModules.RNSumup;
 
@@ -19,6 +19,14 @@ class RNSumup {
     static async isLoggedIn() {
         const {loggedIn} = await NativeRNSumup.isLoggedIn();
         return loggedIn;
+    }
+
+    static addLoginListener(callback) {
+        DeviceEventEmitter.addListener('loggedIn', callback);
+    }
+
+    static removeLoginListener(callback) {
+        DeviceEventEmitter.removeListener('loggedIn', callback);
     }
 }
 
