@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -32,7 +33,7 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
 
     public RNSumupModule(final ReactApplicationContext reactContext) {
         super(reactContext);
-        new Handler().post(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 SumUpState.init(reactContext.getApplicationContext());
