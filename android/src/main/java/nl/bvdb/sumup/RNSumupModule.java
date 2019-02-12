@@ -31,7 +31,7 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
 
     public RNSumupModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        SumUpState.init(reactContext);
+        //SumUpState.init(reactContext);
 
         this.reactContext = reactContext;
     }
