@@ -48,6 +48,8 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
         });
 
         this.reactContext = reactContext;
+
+        reactContext.addActivityEventListener(mActivityEventListener);
     }
 
     @Override
