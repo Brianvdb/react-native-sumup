@@ -16,6 +16,10 @@ class RNSumup {
         NativeRNSumup.paymentSettings();
     }
 
+    static logout() {
+        NativeRNSumup.logout();
+    }
+
     static async isLoggedIn() {
         const {loggedIn} = await NativeRNSumup.isLoggedIn();
         return loggedIn;
