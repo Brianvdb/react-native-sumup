@@ -3,7 +3,6 @@ package nl.bvdb.sumup;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
@@ -17,7 +16,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.sumup.merchant.Models.TransactionInfo;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpLogin;
 import com.sumup.merchant.api.SumUpPayment;
@@ -31,6 +29,8 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
     private final ReactApplicationContext reactContext;
 
     private static final String EVENT_LOGGED_IN = "loggedIn";
+    private static final String EVENT_PAYMENT_SUCCESS = "paymentSuccess";
+    private static final String EVENT_PAYMENT_FAILED = "paymentFailed";
 
     private static final int REQUEST_CODE_LOGIN = 1;
     private static final int REQUEST_CODE_PAYMENT = 2;
@@ -121,17 +121,32 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
         sendEvent(EVENT_LOGGED_IN, map);
     }
 
+    private void onPaymentSuccess() {
+        WritableMap map = Arguments.createMap();
+        sendEvent(EVENT_PAYMENT_SUCCESS, map);
+    }
+
+    private void onPaymentFailed() {
+        WritableMap map = Arguments.createMap();
+        sendEvent(EVENT_PAYMENT_FAILED, map);
+    }
+
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
 
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
             switch (requestCode) {
                 case REQUEST_CODE_PAYMENT:
-                    if (data != null) {
+                    if (resultCode == SumUpAPI.Response.ResultCode.SUCCESSFUL) {
+                        onPaymentSuccess();
+                    } else {
+                        onPaymentFailed();
+                    }
+                    /*if (data != null) {
                         Bundle extra = data.getExtras();
                         TransactionInfo transactionInfo = extra.getParcelable(SumUpAPI.Response.TX_INFO);
 
-                    }
+                    }*/
                     break;
                 case REQUEST_CODE_LOGIN:
                     if (resultCode == SumUpAPI.Response.ResultCode.SUCCESSFUL || resultCode == SumUpAPI.Response.ResultCode.ERROR_ALREADY_LOGGED_IN) {

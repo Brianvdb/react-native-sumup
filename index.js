@@ -29,6 +29,22 @@ class RNSumup {
         DeviceEventEmitter.addListener('loggedIn', callback);
     }
 
+    static addPaymentSuccessListener(callback) {
+        DeviceEventEmitter.addListener('paymentSuccess', callback);
+    }
+
+    static removePaymentSuccessListener(callback) {
+        DeviceEventEmitter.removeListener('paymentSuccess', callback);
+    }
+
+    static addPaymentFailedListener(callback) {
+        DeviceEventEmitter.addListener('paymentFailed', callback);
+    }
+
+    static removePaymentFailedListener(callback) {
+        DeviceEventEmitter.removeListener('paymentFailed', callback);
+    }
+
     static removeLoginListener(callback) {
         DeviceEventEmitter.removeListener('loggedIn', callback);
     }
