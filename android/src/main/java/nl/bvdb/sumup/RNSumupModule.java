@@ -4,6 +4,7 @@ package nl.bvdb.sumup;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -29,9 +30,14 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
 
     public static String AFFILIATE_KEY = "3ea03525-8d68-4313-906d-72e738d34c6c";
 
-    public RNSumupModule(ReactApplicationContext reactContext) {
+    public RNSumupModule(final ReactApplicationContext reactContext) {
         super(reactContext);
-        //SumUpState.init(reactContext);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                SumUpState.init(reactContext.getApplicationContext());
+            }
+        });
 
         this.reactContext = reactContext;
     }
