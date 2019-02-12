@@ -35,8 +35,11 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
     private static final int REQUEST_CODE_LOGIN = 1;
     private static final int REQUEST_CODE_PAYMENT = 2;
     private static final int REQUEST_CODE_PAYMENT_SETTINGS = 3;
+    private static final int REQUEST_CODE_LOGIN_PENDING = 4;
 
     public static String AFFILIATE_KEY = "3ea03525-8d68-4313-906d-72e738d34c6c";
+
+    private String mPendingAmount = null;
 
     public RNSumupModule(final ReactApplicationContext reactContext) {
         super(reactContext);
@@ -76,6 +79,13 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void charge(String amount) {
+        if (!SumUpAPI.isLoggedIn()) {
+            mPendingAmount = amount;
+            SumUpLogin sumUplogin = SumUpLogin.builder(AFFILIATE_KEY).build();
+            SumUpAPI.openLoginActivity(getCurrentActivity(), sumUplogin, REQUEST_CODE_LOGIN_PENDING);
+            return;
+        }
+
         SumUpPayment payment = SumUpPayment.builder()
                 .total(new BigDecimal(amount))
                 .currency(SumUpPayment.Currency.EUR)
@@ -126,6 +136,13 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
                 case REQUEST_CODE_LOGIN:
                     if (resultCode == SumUpAPI.Response.ResultCode.SUCCESSFUL || resultCode == SumUpAPI.Response.ResultCode.ERROR_ALREADY_LOGGED_IN) {
                         onLoggedIn();
+                    }
+                case REQUEST_CODE_LOGIN_PENDING:
+                    if (resultCode == SumUpAPI.Response.ResultCode.SUCCESSFUL || resultCode == SumUpAPI.Response.ResultCode.ERROR_ALREADY_LOGGED_IN) {
+                        if (mPendingAmount != null) {
+                            charge(mPendingAmount);
+                            mPendingAmount = null;
+                        }
                     }
                 default:
                     break;
