@@ -1,4 +1,3 @@
-
 {
   "name": "react-native-sumup",
   "version": "1.0.0",
@@ -12,7 +11,7 @@
   ],
   "author": "",
   "license": "",
-  "peerDependencies": {
+  "devDependencies": {
     "react-native": "^0.41.2"
   }
 }
