@@ -8,10 +8,13 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.BaseActivityEventListener;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
 import com.sumup.merchant.Models.TransactionInfo;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpLogin;
@@ -52,6 +55,17 @@ public class RNSumupModule extends ReactContextBaseJavaModule {
     public void login() {
         SumUpLogin sumUplogin = SumUpLogin.builder(AFFILIATE_KEY).build();
         SumUpAPI.openLoginActivity(getCurrentActivity(), sumUplogin, REQUEST_CODE_LOGIN);
+    }
+
+    @ReactMethod
+    public void isLoggedIn(Promise promise) {
+        boolean loggedIn = SumUpAPI.isLoggedIn();
+
+        WritableMap map = Arguments.createMap();
+        map.putBoolean("loggedIn", loggedIn);
+
+        promise.resolve(map);
+
     }
 
     @ReactMethod
