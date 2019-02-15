@@ -25,7 +25,7 @@ class RNSumup {
         return loggedIn;
     }
 
-    static async prepareCardTerminal() {
+    static prepareCardTerminal() {
         NativeRNSumup.prepareCardTerminal();
     }
 
