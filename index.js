@@ -25,6 +25,10 @@ class RNSumup {
         return loggedIn;
     }
 
+    static async prepareCardTerminal() {
+        NativeRNSumup.prepareCardTerminal();
+    }
+
     static addLoginListener(callback) {
         DeviceEventEmitter.addListener('loggedIn', callback);
     }
