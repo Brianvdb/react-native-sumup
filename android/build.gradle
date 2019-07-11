@@ -39,12 +39,17 @@ repositories {
     maven {
         url "https://maven.sumup.com/releases"
     }
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url "$rootDir/../node_modules/react-native/android"
+    }
     jcenter()
 }
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
     implementation 'com.sumup:merchant-sdk:3.2.0'
+
 
 }
   
