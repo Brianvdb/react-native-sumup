@@ -12,6 +12,6 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "react-native": "0.59.8"
+    "react-native": "0.70.3"
   }
 }
